@@ -15,4 +15,4 @@ This COBOL CRUD system (Create, Read, Update, Delete) was developed as a final p
 
 Originally character based by Fabio Marques.
 Link to the original project: https://github.com/fmarqueseti/Filmoteca-Educ360
-Linl to the converted/optimized ACU character based by me: https://github.com/isacco1975/Filmoteca-Acu
+Link to the optimized ACU character based: https://github.com/isacco1975/Filmoteca-Acu
