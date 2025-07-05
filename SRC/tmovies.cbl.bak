@@ -17,8 +17,8 @@
        FILE                 SECTION.
        FD MOVIES.
           COPY 'CPVIDDAT.CPY'.
-      *    
-       FD GENRES.   
+      *
+       FD GENRES.
           COPY 'CPVIDGEN.CPY'.
 
        WORKING-STORAGE      SECTION.
@@ -44,12 +44,12 @@
        77 E-NEW            PIC  9 VALUE 1.
        77 E-DELETE         PIC  9 VALUE 1.
        77 E-SAVE           PIC  9 VALUE 1.
-       77 E-PREVIEW        PIC  9 VALUE 1. 
+       77 E-PREVIEW        PIC  9 VALUE 1.
        77 E-EDIT           PIC  9 VALUE 1.
        77 E-PRINT          PIC  9 VALUE ZERO.
        77 E-SEARCH         PIC  9 VALUE 1.
        77 FORM1-ST-1-HANDLE       USAGE IS HANDLE OF STATUS-BAR.
-       77 LOGO-BMP         PIC S9(9) COMP-4.                  
+       77 LOGO-BMP         PIC S9(9) COMP-4.
        77 E-PICK           PIC  9 VALUE 1.
        77 TOOLBAR-BMP      PIC S9(9) COMP-4.
        77 SCREEN1-HANDLE          USAGE IS HANDLE OF WINDOW.
@@ -63,7 +63,8 @@
        77 STATUS-GENRES    PIC  X(2).
            88 VALID-STATUS-GENRES VALUE IS "00" THRU "09".
 
-       01 OLD-MOV-REC PIC X(356).
+       77 OLD-MOV-REC PIC X(356).
+       77 DECISION PIC 9.
 
 
        LINKAGE          SECTION.
@@ -267,13 +268,13 @@
            TRANSPARENT,
            TITLE "GENRE",
            .
-           
+
       * BITMAP CONTROLLER
        05  MOVIEBMP,
            BITMAP,
            LINE 09 COL 55
            LINES 110 SIZE 150
-           BITMAP-HANDLE LOGO-BMP.     
+           BITMAP-HANDLE LOGO-BMP.
 
       * LABEL
        05
@@ -428,7 +429,7 @@
            BITMAP-HANDLE TOOLBAR-BMP,
            FRAMED,
            SQUARE,
-           ENABLED E-PRINT, 
+           ENABLED E-PRINT,
            EXCEPTION-VALUE 7,
            FLAT,
            ID IS 110,
@@ -556,9 +557,9 @@
        PROCEDURE  DIVISION.
        DECLARATIVES.
       /
-      *----------------------------------------------------------------* 
-      * DECLARATIVES TO HABDLE COMMON FILE ERRORS                      * 
-      *----------------------------------------------------------------* 
+      *----------------------------------------------------------------*
+      * DECLARATIVES TO HABDLE COMMON FILE ERRORS                      *
+      *----------------------------------------------------------------*
        MOVIES-ERR SECTION.
            USE AFTER ERROR PROCEDURE ON MOVIES.
            SET RECLOCKED TO FALSE.
@@ -590,7 +591,7 @@
                 SET STATUSVIEW  TO TRUE
                 PERFORM STATUS-BAR-MSG
 
-                IF NEW-REC 
+                IF NEW-REC
                    INITIALIZE MOV-REC OF MOVIES
                               REPLACING NUMERIC DATA BY ZEROES
                                    ALPHANUMERIC DATA BY SPACES
@@ -622,17 +623,17 @@
            EXIT.
        END DECLARATIVES.
       /
-      *----------------------------------------------------------------* 
-      * MAIN                                                           * 
-      *----------------------------------------------------------------* 
+      *----------------------------------------------------------------*
+      * MAIN                                                           *
+      *----------------------------------------------------------------*
        MAIN-LOGIC.
            PERFORM INITIALIZE-ROUTINE
            PERFORM FORM1-OPEN-ROUTINE
            .
       /
-      *----------------------------------------------------------------* 
-      * INITIALIZE                                                     * 
-      *----------------------------------------------------------------* 
+      *----------------------------------------------------------------*
+      * INITIALIZE                                                     *
+      *----------------------------------------------------------------*
        INITIALIZE-ROUTINE.
            ACCEPT SYSTEM-INFORMATION FROM SYSTEM-INFO.
            ACCEPT TERMINAL-ABILITIES FROM TERMINAL-INFO.
@@ -640,18 +641,18 @@
            PERFORM OPEN-FILE-RTN.
            .
       /
-      *----------------------------------------------------------------* 
-      * INITIALIZE BITMAPS                                             * 
-      *----------------------------------------------------------------* 
+      *----------------------------------------------------------------*
+      * INITIALIZE BITMAPS                                             *
+      *----------------------------------------------------------------*
        INIT-BMP.
            COPY RESOURCE "..\RESOURCE\TOOLBAR.BMP".
            CALL "W$BITMAP" USING WBITMAP-LOAD "..\RESOURCE\TOOLBAR.BMP",
                    GIVING TOOLBAR-BMP.
            .
       /
-      *----------------------------------------------------------------* 
-      * MAIN OPENING FILE ROUTINE                                      * 
-      *----------------------------------------------------------------* 
+      *----------------------------------------------------------------*
+      * MAIN OPENING FILE ROUTINE                                      *
+      *----------------------------------------------------------------*
        OPEN-FILE-RTN.
            OPEN  I-O MOVIES
            IF STATUS-MOVIES = "35"
@@ -661,12 +662,12 @@
                    OPEN I-O MOVIES
                 END-IF
            END-IF
-      *     
+      *
            IF NOT VALID-STATUS-MOVIES
       *        PERFORM  FORM1-EXTENDED-FILE-STATUS
                PERFORM EXIT-STOP-ROUTINE
            END-IF
-           
+
            OPEN INPUT GENRES
 
            IF STATUS-GENRES = "35"
@@ -676,29 +677,24 @@
                    OPEN I-O GENRES
                 END-IF
            END-IF
-      *     
+      *
            IF NOT VALID-STATUS-GENRES
       *        PERFORM  FORM1-EXTENDED-FILE-STATUS
                PERFORM EXIT-STOP-ROUTINE
            END-IF
            .
       /
-      *----------------------------------------------------------------* 
-      * OPEN FILE   ROUTINE                                            * 
-      *----------------------------------------------------------------* 
-       OPEN-MOVIES.
-      /
-      *----------------------------------------------------------------* 
-      * MAIN CLOSING FILE ROUTINE                                      * 
-      *----------------------------------------------------------------* 
+      *----------------------------------------------------------------*
+      * MAIN CLOSING FILE ROUTINE                                      *
+      *----------------------------------------------------------------*
        CLOSE-FILE-RTN.
            CLOSE MOVIES
            CLOSE GENRES
            .
       /
-      *----------------------------------------------------------------* 
-      * SCREEN ROUTINES                                                * 
-      *----------------------------------------------------------------* 
+      *----------------------------------------------------------------*
+      * SCREEN ROUTINES                                                *
+      *----------------------------------------------------------------*
        FORM1-OPEN-ROUTINE.
            PERFORM FORM1-SCRN
            PERFORM FORM1-PROC
@@ -706,8 +702,8 @@
 
        FORM1-SCRN.
            PERFORM FORM1-CREATE-WIN
-           DISPLAY FORM1-TB-1
-           PERFORM FORM1-DISPLAY
+      *     DISPLAY FORM1-TB-1
+      *     PERFORM FORM1-DISPLAY
            MODIFY MOVIEBMP BITMAP-HANDLE LOGO-BMP
            .
 
@@ -748,14 +744,20 @@
 
            PERFORM START-MOVIES
            PERFORM FROMREC-TOSCREEN
+ 
            MOVE ZERO TO MOD, MOD-K
            DISPLAY FORM1
+
+           MODIFY TOOL-EDIT,   VALUE   MOD
+           MODIFY TOOL-DELETE, ENABLED MOD
+           MODIFY TOOL-PICK,   ENABLED MOD                
+           MODIFY TOOL-SEARCH  ENABLED MOD
            .
 
        FORM1-PROC.
            SET STATUSVIEW  TO TRUE.
            PERFORM STATUS-BAR-MSG
-           
+
            PERFORM UNTIL EXIT-PUSHED
               ACCEPT FORM1
                  ON EXCEPTION
@@ -764,24 +766,30 @@
            END-PERFORM
 
            DESTROY FORM1-HANDLE
-           INITIALIZE KEY-STATUS          
+           INITIALIZE KEY-STATUS
            .
 
        FORM1-EVALUATE-FUNC.
-           EVALUATE KEY-STATUS           
+           EVALUATE KEY-STATUS
            WHEN 150 *> THE EDIT FUNCTION
-                INQUIRE TOOL-EDIT, ENABLED IN E-EDIT     
+                INQUIRE TOOL-EDIT, ENABLED IN E-EDIT
+
                 IF E-EDIT = 1
-                   IF MOD = 0 
+                   IF MOD = 0
                       MOVE 1 TO MOD
                       SET STATUSEDIT     TO TRUE
-                   ELSE      
+                      MOVE 1 TO E-DELETE, E-PICK
+                   ELSE
                       MOVE 0 TO MOD
+                      MOVE 0 TO E-DELETE, E-PICK 
                       SET STATUSVIEW     TO TRUE
                    END-IF
-                   
-                   MODIFY TOOL-EDIT, VALUE = MOD
-                      
+
+                   MODIFY TOOL-EDIT,   VALUE   MOD
+                   MODIFY TOOL-DELETE, ENABLED MOD
+                   MODIFY TOOL-SEARCH  ENABLED MOD
+                   MODIFY TOOL-PICK,   ENABLED MOD
+ 
                    PERFORM STATUS-BAR-MSG
                    DISPLAY FORM1
                 END-IF
@@ -798,7 +806,7 @@
       *        WHEN KEY-STATUS = 1003
       *           PERFORM PB-FOTO-LINKTO
                WHEN KEY-STATUS = 2
-                  PERFORM NEW-ENTRY     
+                  PERFORM NEW-ENTRY
       *        WHEN KEY-STATUS = 4
       *           PERFORM CANCELLA-LINKTO
                WHEN KEY-STATUS = 3
@@ -847,9 +855,9 @@
            MOVE 27 TO KEY-STATUS
            .
       /
-      *----------------------------------------------------------------* 
+      *----------------------------------------------------------------*
       * ADD A NEW ENTRY TO THE FILE                                    *
-      *----------------------------------------------------------------* 
+      *----------------------------------------------------------------*
        NEW-ENTRY.
            PERFORM START-MOVIES
 
@@ -869,24 +877,36 @@
 
            MOVE 5002   TO CONTROL-ID
            MOVE 4      TO ACCEPT-CONTROL
-           .   
+           .
       /
-      *----------------------------------------------------------------* 
+      *----------------------------------------------------------------*
       * SAVE THE CURRENT RECORD FROM THE SCREEN TO THE FILE            *
-      *----------------------------------------------------------------* 
-       SAVE-ENTRY.   
+      *----------------------------------------------------------------*
+       SAVE-ENTRY.
            PERFORM FROMSCREEN-TORECORD
 
            WRITE MOV-REC
                  INVALID KEY
-                         DISPLAY MESSAGE BOX 
-                         'This Entry already Exists!'
+                         DISPLAY MESSAGE BOX
+                            "Save changes to the current Entry?"
+                            TITLE   TITLEX
+                            TYPE    MB-YES-NO
+                            DEFAULT MB-NO
+                            GIVING  DECISION
+
+                         IF DECISION = MB-YES
+                            REWRITE MOV-REC
+                               INVALID KEY
+                                   DISPLAY MESSAGE BOX
+                                    "Error during REWRITE"
+                                    TITLE   TITLEX
+                         END-IF
            END-WRITE
-           .   
+           .
       /
-      *----------------------------------------------------------------* 
+      *----------------------------------------------------------------*
       * POSITION ON THE FIRST FREE RECORD                              *
-      *----------------------------------------------------------------* 
+      *----------------------------------------------------------------*
        START-MOVIES.
            INITIALIZE CODIGO
 
@@ -900,55 +920,52 @@
            END-START
            .
       /
-      *----------------------------------------------------------------* 
+      *----------------------------------------------------------------*
       * PUT THE DATA FROM THE FILE INTO SCREEN FIELDS                  *
-      *----------------------------------------------------------------* 
+      *----------------------------------------------------------------*
        FROMREC-TOSCREEN.
            MOVE ZERO       TO MOD-K
            MOVE 1          TO MOD
-           
+
            MODIFY EF-CODE  VALUE CODIGO
            MODIFY EF-TITLE VALUE TITULO
            MODIFY EF-GENRE VALUE GENERO
-           MODIFY EF-NOTE  VALUE NOTA  
+           MODIFY EF-NOTE  VALUE NOTA
            MODIFY EF-LOGO  VALUE IMAGEN
-           
-           CALL "W$BITMAP" 
-                USING WBITMA-LOAD
+
+           CALL "W$BITMAP"
+                USING WBITMAP-LOAD
                        IMAGEN
-                GIVING LOGO-BMP       
-           
+                GIVING LOGO-BMP
+
            MODIFY MOVIEBMP BITMAP-HANDLE LOGO-BMP
-           DISPLAY FORM1                  
-           .         
+           DISPLAY FORM1
+
+           CALL "W$BITMAP"
+                USING WBITMAP-DESTROY
+                      LOGO-BMP
+           .
       /
-      *----------------------------------------------------------------* 
+      *----------------------------------------------------------------*
       * PUT THE DATA FROM THE SCRERN INTO THE FILE                    *
-      *----------------------------------------------------------------* 
+      *----------------------------------------------------------------*
        FROMSCREEN-TORECORD.
            INQUIRE EF-CODE    VALUE CODIGO
            INQUIRE EF-TITLE   VALUE TITULO
-           INQUIRE EF-GENRE   VALUE GENERO             
-           INQUIRE EF-NOTE    VALUE NOTA    
-           INQUIRE EF-LOGO    VALUE IMAGEN   
-           .         
+           INQUIRE EF-GENRE   VALUE GENERO
+           INQUIRE EF-NOTE    VALUE NOTA
+           INQUIRE EF-LOGO    VALUE IMAGEN
+           .
       /
-      /
-      *----------------------------------------------------------------* 
-      * EDIT A RECORD                                                  *
-      *----------------------------------------------------------------* 
-       EDIT-RECORD-ROUTINE.
-                      
-      /
-      *----------------------------------------------------------------* 
+      *----------------------------------------------------------------*
       * SAVE CHANGES                                                   *
-      *----------------------------------------------------------------* 
+      *----------------------------------------------------------------*
        SAVE-CHANGES-ROUTINE.
            .
       /
-      *----------------------------------------------------------------* 
-      * EXIT PROGRAM                                                   * 
-      *----------------------------------------------------------------* 
+      *----------------------------------------------------------------*
+      * EXIT PROGRAM                                                   *
+      *----------------------------------------------------------------*
        EXIT-STOP-ROUTINE.
            PERFORM CLOSE-FILE-RTN
            CALL "W$BITMAP" USING WBITMAP-DESTROY, TOOLBAR-BMP
@@ -958,4 +975,3 @@
        COPYS.
            copy "status.cpy".
            .
-           
