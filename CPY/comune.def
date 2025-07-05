@@ -107,5 +107,3 @@
        77  esercizio-x     pic x(4). |Di comodo per fare le set e le accept
        77  esercizio       pic 9(4). |Valore numerico effettivo che sostituisce tge-anno
        77  esercizio-G2    pic x(2). |Conversione dell'anno 2007 --> "A7"
-                              
-           COPY  "messaggi.def".
