@@ -1,4 +1,0 @@
-           copy "blockpgm.lks".
-       77 USER-CODI        PIC  X(10).
-       77 LIVELLO-ABIL     PIC  9.
-
