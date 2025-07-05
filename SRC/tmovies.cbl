@@ -126,7 +126,7 @@
            ID IS 5003,
            HEIGHT-IN-CELLS,
            WIDTH-IN-CELLS,
-           MAX-TEXT 30,
+           MAX-TEXT 2,
            .
            
       * ENTRY FIELD
@@ -144,7 +144,7 @@
            ID IS 5003,
            HEIGHT-IN-CELLS,
            WIDTH-IN-CELLS,
-           MAX-TEXT 30,
+           MAX-TEXT 3,
            .
 
       * ENTRY FIELD
@@ -162,7 +162,7 @@
            ID IS 5003,
            HEIGHT-IN-CELLS,
            WIDTH-IN-CELLS,
-           MAX-TEXT 30,
+           MAX-TEXT 15,
            .
 
       * LABEL
@@ -197,10 +197,10 @@
 
       * LABEL
        05
-           LBL-DISTRIB,
+           LBL-DURATION,
            LABEL,
            COL 3,00,
-           LINE 9,00,
+           LINE 11,00,
            SIZE 15,00 ,
            ID IS 192,
            HEIGHT-IN-CELLS,
@@ -210,10 +210,10 @@
 
       * LABEL
        05
-           LBL-DURATION,
+           LBL-DISTRIB,
            LABEL,
            COL 3,00,
-           LINE 11,00,
+           LINE 09,00,
            SIZE 15,00 ,
            ID IS 192,
            HEIGHT-IN-CELLS,
@@ -899,8 +899,8 @@
       *           PERFORM TOOL-MODIFICA-LINKTO
       *        WHEN KEY-STATUS = 7
       *           PERFORM STAMPA-LINKTO
-      *        WHEN KEY-STATUS = 8
-      *           PERFORM TOOL-CERCA-LINKTO
+               WHEN KEY-STATUS = 8
+                  PERFORM ZOOM-ENTRIES
       *        WHEN KEY-STATUS = 9
       *           PERFORM TOOL-SELEZIONA-LINKTO
                WHEN KEY-STATUS = 1002
@@ -1097,6 +1097,25 @@
       *----------------------------------------------------------------*
        SAVE-CHANGES-ROUTINE.
            .
+      /
+      *----------------------------------------------------------------*
+      * CALL TO XZOOM                                                  *
+      *----------------------------------------------------------------*
+       ZOOM-ENTRIES.
+           EVALUATE CONTROL-ID
+           WHEN 5002
+                MOVE "MOVIES.DAT"  TO COMO-FILE         
+                INQUIRE EF-CODE, VALUE IN CODIGO
+                CALL "ZOOM-GT"  USING COMO-FILE, MOV-REC
+                                GIVING STATO-ZOOM
+                END-CALL
+                CANCEL "ZOOM-GT"
+
+                IF STATO-ZOOM = 0
+                   PERFORM FROMREC-TOSCREEN
+                END-IF
+           END-EVALUATE 
+           .         
       /
       *----------------------------------------------------------------*
       * EXIT PROGRAM                                                   *
