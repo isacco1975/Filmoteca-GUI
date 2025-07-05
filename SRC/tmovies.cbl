@@ -890,24 +890,12 @@
                  IF EVENT-TYPE = CMD-CLOSE
                     PERFORM FORM1-EXIT
                  END-IF
-      *        WHEN KEY-STATUS = 1003
-      *           PERFORM PB-FOTO-LINKTO
                WHEN KEY-STATUS = 2
                   PERFORM NEW-ENTRY
-      *        WHEN KEY-STATUS = 4
-      *           PERFORM CANCELLA-LINKTO
                WHEN KEY-STATUS = 3
                   PERFORM SAVE-ENTRY
-      *        WHEN KEY-STATUS = 6
-      *           PERFORM ANTEPRIMA-LINKTO
-      *        WHEN KEY-STATUS = 150
-      *           PERFORM TOOL-MODIFICA-LINKTO
-      *        WHEN KEY-STATUS = 7
-      *           PERFORM STAMPA-LINKTO
                WHEN KEY-STATUS = 8
                   PERFORM ZOOM-ENTRIES
-      *        WHEN KEY-STATUS = 9
-      *           PERFORM TOOL-SELEZIONA-LINKTO
                WHEN KEY-STATUS = 1002
                   PERFORM FIRST-ENTRY  
                WHEN KEY-STATUS = 67
