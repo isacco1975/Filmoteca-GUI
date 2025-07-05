@@ -128,6 +128,42 @@
            WIDTH-IN-CELLS,
            MAX-TEXT 30,
            .
+           
+      * ENTRY FIELD
+       05
+           EF-DURATION,
+           ENTRY-FIELD,
+           COL 20,00,
+           LINE 9,00,
+           LINES 1,31 ,
+           SIZE 25,00 ,
+           BOXED,
+           COLOR IS 2,
+           ENABLED MOD,
+           FONT IS SMALL-FONT,
+           ID IS 5003,
+           HEIGHT-IN-CELLS,
+           WIDTH-IN-CELLS,
+           MAX-TEXT 30,
+           .
+
+      * ENTRY FIELD
+       05
+           EF-DISTRIB,
+           ENTRY-FIELD,
+           COL 20,00,
+           LINE 11,00,
+           LINES 1,31 ,
+           SIZE 25,00 ,
+           BOXED,
+           COLOR IS 2,
+           ENABLED MOD,
+           FONT IS SMALL-FONT,
+           ID IS 5003,
+           HEIGHT-IN-CELLS,
+           WIDTH-IN-CELLS,
+           MAX-TEXT 30,
+           .
 
       * LABEL
        05
@@ -143,14 +179,40 @@
            COLOR 5
            .
 
+      * LABEL
+       05
+           LBL-DISTRIB,
+           LABEL,
+           COL 3,00,
+           LINE 9,00,
+           SIZE 15,00 ,
+           ID IS 192,
+           HEIGHT-IN-CELLS,
+           WIDTH-IN-CELLS,
+           TITLE "DISTRIBUTION",
+           .
+
+      * LABEL
+       05
+           LBL-DURATION,
+           LABEL,
+           COL 3,00,
+           LINE 11,00,
+           SIZE 15,00 ,
+           ID IS 192,
+           HEIGHT-IN-CELLS,
+           WIDTH-IN-CELLS,
+           TITLE "DURATION",
+           .
+
       * ENTRY FIELD
        05
-           EF-NOTE,
+           EF-GRADE,
            ENTRY-FIELD,
-           COL 20,00,
-           LINE 19,00,
+           COL 75,00,
+           LINE 7,00,
            LINES 1,31 ,
-           SIZE 60,00 ,
+           SIZE 5,00 ,
            BOXED,
            COLOR IS 2,
            ENABLED MOD,
@@ -191,7 +253,6 @@
            WIDTH-IN-CELLS,
            .
 
-
       * PUSH BUTTON
        05
            PB-LOGO,
@@ -210,7 +271,7 @@
 
       * LABEL
        05
-           FORM1-LA-5AA,
+           LBL-CODE,
            LABEL,
            COL 3,00,
            LINE 2,00,
@@ -239,7 +300,7 @@
 
       * LABEL
        05
-           FORM1-LA-1,
+           LBL-TITLE,
            LABEL,
            COL 3,00,
            LINE 5,00,
@@ -255,7 +316,7 @@
 
       * LABEL
        05
-           FORM1-LA-3,
+           LBL-GENRE,
            LABEL,
            COL 3,00,
            LINE 7,00,
@@ -274,14 +335,15 @@
            BITMAP,
            LINE 09 COL 55
            LINES 110 SIZE 150
-           BITMAP-HANDLE LOGO-BMP.
+           BITMAP-HANDLE LOGO-BMP
+           .
 
       * LABEL
        05
-           FORM1-LA-4,
+           LBL-GRADE,
            LABEL,
-           COL 3,00,
-           LINE 19,00,
+           COL 65,00,
+           LINE 7,00,
            LINES 1,31 ,
            SIZE 13,00 ,
            FONT IS SMALL-FONT,
@@ -289,7 +351,7 @@
            HEIGHT-IN-CELLS,
            WIDTH-IN-CELLS,
            TRANSPARENT,
-           TITLE "NOTES",
+           TITLE "GRADE",
            .
 
       * TOOLBAR
@@ -648,6 +710,8 @@
            COPY RESOURCE "..\RESOURCE\TOOLBAR.BMP".
            CALL "W$BITMAP" USING WBITMAP-LOAD "..\RESOURCE\TOOLBAR.BMP",
                    GIVING TOOLBAR-BMP.
+           CALL "W$BITMAP" USING WBITMAP-LOAD "RESOURCE\3.JPG",
+                   GIVING LOGO-BMP.
            .
       /
       *----------------------------------------------------------------*
@@ -742,8 +806,7 @@
                HANDLE IS FORM1-ST-1-HANDLE
            DISPLAY FORM1 UPON FORM1-HANDLE
 
-           PERFORM START-MOVIES
-           PERFORM FROMREC-TOSCREEN
+           PERFORM FIRST-ENTRY
  
            MOVE ZERO TO MOD, MOD-K
            DISPLAY FORM1
@@ -819,14 +882,14 @@
       *           PERFORM TOOL-CERCA-LINKTO
       *        WHEN KEY-STATUS = 9
       *           PERFORM TOOL-SELEZIONA-LINKTO
-      *        WHEN KEY-STATUS = 1002
-      *           PERFORM TOOL-PRIMO
-      *        WHEN KEY-STATUS = 67
-      *           PERFORM TOOL-PRECEDENTE
-      *        WHEN KEY-STATUS = 68
-      *           PERFORM TOOL-SUCCESSIVO
-      *        WHEN KEY-STATUS = 1006
-      *           PERFORM TOOL-ULTIMO
+               WHEN KEY-STATUS = 1002
+                  PERFORM FIRST-ENTRY  
+               WHEN KEY-STATUS = 67
+                  PERFORM PREV-ENTRY     
+               WHEN KEY-STATUS = 68
+                  PERFORM NEXT-ENTRY     
+               WHEN KEY-STATUS = 1006
+                  PERFORM LAST-ENTRY
            END-EVALUATE
 
       * AVOID CHANGING FOCUS
@@ -857,7 +920,7 @@
       * ADD A NEW ENTRY TO THE FILE                                    *
       *----------------------------------------------------------------*
        NEW-ENTRY.
-           PERFORM START-MOVIES
+           PERFORM START-MOVIES-GREATER
 
            READ MOVIES
                 INVALID KEY
@@ -905,17 +968,75 @@
       *----------------------------------------------------------------*
       * POSITION ON THE FIRST FREE RECORD                              *
       *----------------------------------------------------------------*
-       START-MOVIES.
+       START-MOVIES-LESS.
+           INITIALIZE CODIGO
+
+           MOVE LOW-VALUES      TO CODIGO
+
+           START MOVIES  KEY >= CODIGO
+                 INVALID KEY
+                     MOVE 1      TO CODIGO
+                 NOT INVALID KEY
+                     READ MOVIES NEXT RECORD
+           END-START
+           .
+      /
+      *----------------------------------------------------------------*
+      * POSITION ON THE LAST  FREE RECORD                              *
+      *----------------------------------------------------------------*
+       START-MOVIES-GREATER.
            INITIALIZE CODIGO
 
            MOVE HIGH-VALUES      TO CODIGO
 
-           START MOVIES  KEY LESS CODIGO
+           START MOVIES  KEY <= CODIGO
                  INVALID KEY
                      MOVE 1      TO CODIGO
                  NOT INVALID KEY
                      READ MOVIES PREVIOUS RECORD
            END-START
+           .
+      /
+      *----------------------------------------------------------------*
+      * SHOW FIRST RECORD                                              *
+      *----------------------------------------------------------------*
+       FIRST-ENTRY.
+           PERFORM START-MOVIES-LESS
+           PERFORM FROMREC-TOSCREEN
+           .
+      /
+      *----------------------------------------------------------------*
+      * SHOW NEXT RECORD                                               *
+      *----------------------------------------------------------------*
+       NEXT-ENTRY.
+           READ MOVIES NEXT
+                AT END 
+                   DISPLAY MESSAGE "Reached the End of File"
+                   TITLE TITLEX
+                NOT AT END
+                   PERFORM FROMREC-TOSCREEN
+           END-READ           
+           .
+      /
+      *----------------------------------------------------------------*
+      * SHOW PREVIOUS RECORD                                           *
+      *----------------------------------------------------------------*
+       PREV-ENTRY.
+           READ MOVIES PREVIOUS
+                AT END 
+                   DISPLAY MESSAGE "Reached the Beginning of File"
+                   TITLE TITLEX
+                NOT AT END
+                   PERFORM FROMREC-TOSCREEN
+           END-READ           
+           .
+      /
+      *----------------------------------------------------------------*
+      * SHOW LAST  RECORD                                              *
+      *----------------------------------------------------------------*
+       LAST-ENTRY.
+           PERFORM START-MOVIES-GREATER
+           PERFORM FROMREC-TOSCREEN
            .
       /
       *----------------------------------------------------------------*
@@ -925,34 +1046,37 @@
            MOVE ZERO       TO MOD-K
            MOVE 1          TO MOD
 
-           MODIFY EF-CODE  VALUE CODIGO
-           MODIFY EF-TITLE VALUE TITULO
-           MODIFY EF-GENRE VALUE GENERO
-           MODIFY EF-NOTE  VALUE NOTA
-           MODIFY EF-LOGO  VALUE IMAGEN
-
+           MODIFY EF-CODE      VALUE CODIGO
+           MODIFY EF-TITLE     VALUE TITULO
+           MODIFY EF-GENRE     VALUE GENERO
+           MODIFY EF-GRADE     VALUE NOTA
+           MODIFY EF-LOGO      VALUE IMAGEN
+           MODIFY EF-DISTRIB   VALUE DISTRIB
+           MODIFY EF-DURATION  VALUE DURACAO
+            
            CALL "W$BITMAP"
-                USING WBITMAP-LOAD
+                USING  WBITMAP-LOAD
                        IMAGEN
                 GIVING LOGO-BMP
 
            MODIFY MOVIEBMP BITMAP-HANDLE LOGO-BMP
-           DISPLAY FORM1
 
-           CALL "W$BITMAP"
-                USING WBITMAP-DESTROY
-                      LOGO-BMP
+      *    CALL "W$BITMAP"
+      *         USING WBITMAP-DESTROY
+      *               LOGO-BMP
            .
       /
       *----------------------------------------------------------------*
       * PUT THE DATA FROM THE SCRERN INTO THE FILE                    *
       *----------------------------------------------------------------*
        FROMSCREEN-TORECORD.
-           INQUIRE EF-CODE    VALUE CODIGO
-           INQUIRE EF-TITLE   VALUE TITULO
-           INQUIRE EF-GENRE   VALUE GENERO
-           INQUIRE EF-NOTE    VALUE NOTA
-           INQUIRE EF-LOGO    VALUE IMAGEN
+           INQUIRE EF-CODE     VALUE CODIGO
+           INQUIRE EF-TITLE    VALUE TITULO
+           INQUIRE EF-GENRE    VALUE GENERO
+           INQUIRE EF-DISTRIB  VALUE DISTRIB
+           INQUIRE EF-DURATION VALUE DURACAO
+           INQUIRE EF-GRADE    VALUE NOTA
+           INQUIRE EF-LOGO     VALUE IMAGEN
            .
       /
       *----------------------------------------------------------------*
