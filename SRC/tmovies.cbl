@@ -66,7 +66,6 @@
        77 OLD-MOV-REC PIC X(356).
        77 DECISION PIC 9.
 
-
        LINKAGE          SECTION.
 
        SCREEN           SECTION.
@@ -129,7 +128,7 @@
            WIDTH-IN-CELLS,
            MAX-TEXT 2,
            .
-           
+
       * ENTRY FIELD
        05
            EF-DURATION,
@@ -819,7 +818,7 @@
            DISPLAY FORM1 UPON FORM1-HANDLE
 
            PERFORM FIRST-ENTRY
- 
+
            MOVE ZERO TO MOD
            MOVE 1    TO MOD-K
            DISPLAY FORM1
@@ -867,7 +866,7 @@
                    ELSE
                       MOVE 0 TO MOD
                       MOVE 1 TO MOD-K
-                      MOVE 0 TO E-DELETE, E-PICK 
+                      MOVE 0 TO E-DELETE, E-PICK
                       SET STATUSVIEW     TO TRUE
                    END-IF
 
@@ -877,7 +876,7 @@
                    MODIFY TOOL-SAVE     ENABLED MOD
                    MODIFY PB-LOGO       ENABLED MOD
                    MODIFY PB-GENRE-ZOOM ENABLED MOD
- 
+
                    PERFORM STATUS-BAR-MSG
                    DISPLAY FORM1
                 END-IF
@@ -897,11 +896,11 @@
                WHEN KEY-STATUS = 8
                   PERFORM ZOOM-ENTRIES
                WHEN KEY-STATUS = 1002
-                  PERFORM FIRST-ENTRY  
+                  PERFORM FIRST-ENTRY
                WHEN KEY-STATUS = 67
-                  PERFORM PREV-ENTRY     
+                  PERFORM PREV-ENTRY
                WHEN KEY-STATUS = 68
-                  PERFORM NEXT-ENTRY     
+                  PERFORM NEXT-ENTRY
                WHEN KEY-STATUS = 1006
                   PERFORM LAST-ENTRY
            END-EVALUATE
@@ -1016,12 +1015,12 @@
       *----------------------------------------------------------------*
        NEXT-ENTRY.
            READ MOVIES NEXT
-                AT END 
+                AT END
                    DISPLAY MESSAGE "Reached the End of File"
                    TITLE TITLEX
                 NOT AT END
                    PERFORM FROMREC-TOSCREEN
-           END-READ           
+           END-READ
            .
       /
       *----------------------------------------------------------------*
@@ -1029,12 +1028,12 @@
       *----------------------------------------------------------------*
        PREV-ENTRY.
            READ MOVIES PREVIOUS
-                AT END 
+                AT END
                    DISPLAY MESSAGE "Reached the Beginning of File"
                    TITLE TITLEX
                 NOT AT END
                    PERFORM FROMREC-TOSCREEN
-           END-READ           
+           END-READ
            .
       /
       *----------------------------------------------------------------*
@@ -1059,7 +1058,7 @@
            MODIFY EF-LOGO      VALUE IMAGEN
            MODIFY EF-DISTRIB   VALUE DISTRIB
            MODIFY EF-DURATION  VALUE DURACAO
-            
+
            CALL "W$BITMAP"
                 USING  WBITMAP-LOAD
                        IMAGEN
@@ -1097,7 +1096,7 @@
        ZOOM-ENTRIES.
            EVALUATE CONTROL-ID
            WHEN 5002
-                MOVE "MOVIES.DAT"  TO COMO-FILE         
+                MOVE "MOVIES.DAT"  TO COMO-FILE
                 INQUIRE EF-CODE, VALUE IN CODIGO
                 CALL "ZOOM-GT"  USING COMO-FILE, MOV-REC
                                 GIVING STATO-ZOOM
@@ -1107,8 +1106,8 @@
                 IF STATO-ZOOM = 0
                    PERFORM FROMREC-TOSCREEN
                 END-IF
-           END-EVALUATE 
-           .         
+           END-EVALUATE
+           .
       /
       *----------------------------------------------------------------*
       * EXIT PROGRAM                                                   *
