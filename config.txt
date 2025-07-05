@@ -1,0 +1,111 @@
+# TRIM SPAZI FINALI SU TUTTI I FILE GENERATI
+strip_trailing_spaces 1
+#
+#------------------------------------------------------------------
+# PERCORSO ARCHIVI
+#------------------------------------------------------------------
+FILE_PREFIX   .\dat\
+
+#------------------------------------------------------------------
+# PERCORSO LOAD
+#------------------------------------------------------------------
+CODE_PREFIX   .\OBJ\
+
+IO_CREATES 1
+TRIM_TRAILING_SPACES 1
+SCROLL 0
+WRAP 0
+
+#----------- VARIABILI AD USO INTERNO --------#
+F10_IS_MENU OFF
+IO_CREATES 1
+KEYBOARD CHECK-NUMBERS=NO
+KEYSTROKE edit=next terminate=13 ^M
+KEYSTROKE Exception=1234         ^F
+KEYSTROKE Exception=4321         ^C
+KEYSTROKE Exception=5678         ^E
+MAX_FILES 256
+#Indica il valore dei file tenuti in lock (VALORE MASSIMO)
+MAX_LOCKS 8191
+#Indica il valore dei record tenuti in lock per ogni file (VALORE MASSIMO)
+LOCKS_PER_FILE 8191
+PRINTER -P SPOOLER-DIRECT
+STRIP_TRAILING_SPACES 1
+#Indica la versione dei file Vision creati
+V_VERSION 4
+ICON F:\Sielco\Sielco.ico
+
+
+#------------ DA VALORIZZARE PRIMA DELL'INSTALLAZIONE ------------------#
+#Percorsi per i programmi da richiamare dal menu
+PR-WORD  C:\Programmi\OpenOffice.org 2.0\program\swriter.exe
+#PR-EXCEL C:\Programmi\OpenOffice.org 2.0\program\scalc.exe
+PR-NOTEP C:\Programmi\UltraEdit\uedit32.exe
+
+#Percorsi di default per le aperture delle OPENSAVEBOX per le note e per le immagini
+PATH_IMMAGINI .\Resource
+
+#Percorso in cui trovo l'utility VUTIL32
+PATH_VUTIL C:\Acucorp\Acucbl610\AcuGT\bin\
+
+PATH_ST F:\Sielco\tmp\
+#Percorso che indirizza Excel per prelevare i files (per la versione Thin dev'essere \\server...)
+PATH_TO_EXCEL F:\Sielco\tmp\
+
+
+
+#------------ RECUPERATO DA SIELCO ------------------#
+
+# This is a sample configuration file
+# You should edit it to match your needs (see the ACUCOBOL User's Guide).  
+
+# NOTE: by default for DOS, PRINTER is defined to be "-D PRN", you 
+# need only make a definition for PRINTER if you want to change this
+
+
+# By default, ANSI-85 file status values are used by ACUCOBOL.  If you
+# want to use 1974 file status values, uncomment the following line
+
+# FILE-STATUS-CODES	74
+
+
+# Uncomment the following line if you want to print a form-feed each
+# time a print file is closed
+
+# PAGE-EJECT-ON-CLOSE	1
+
+
+# Uncomment this line if you want to treat OPEN ... WITH LOCK as if it
+# were written OPEN ... WITH MASS-UPDATE.
+
+# MASS-UPDATE		1
+
+
+# Uncomment this line if you want all newly created indexed files to be
+# compressed
+
+# COMPRESS-FILES	1
+#CODE-SUFFIX    OUT
+#SCREEN         Wrap=0
+#SCREEN         Scroll=0
+KEYBOARD       Cursor-Past-End=YES
+KEYSTROKE      Exception=101 ^I
+KEYSTROKE      Exception=102 kB
+#KEYSTROKE      Terminate=0 ^M
+IO-Creates     1
+Close-On-Exit  2
+Max-Files      128
+Locks-Per-File 20
+EXTERNAL-SIZE  8192
+RECURSION      1
+KEYSTROKE      Exception=10 U1
+V-VERSION      3
+# COLOR-MODE     8
+LPT1           -P SPOOLER-DIRECT
+
+#PRINTSCREEN_OUTPUT Ask
+#PRINTSCREEN_OUTPUT Print
+#PRINTSCREEN_OUTPUT Print-Ask
+#PRINTSCREEN_OUTPUT NomeFile.bmp
+
+#KEYSTROKE HOT-KEY=PrintScreenVic K9

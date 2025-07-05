@@ -1,0 +1,2 @@
+SRC\tmovies.cbl, line 846: Warning: Area A should be blank
+SRC\tmovies.cbl, line 1076: Missing resource file: 'RESOURCE\TOOLBAR.BMP'

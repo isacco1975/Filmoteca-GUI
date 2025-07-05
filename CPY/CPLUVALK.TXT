@@ -1,0 +1,30 @@
+      * Variabili la Gestione dell'utente, azienda e anno contabile e iva.
+       01  I-VAR-LNK.
+           |Codice Utente
+           03  I-COD-UTE            PIC XX.   |da environment???
+           |Codice Azienda
+           03  I-COD-AZI            PIC XXX.  |da login???
+           03  I-LIBERO1            PIC XX.
+           |Valore Fisso -1
+           03  I-SEC-LEV            PIC S99.  
+           |Anno IVA
+           03  I-ANN-IVA            PIC 9(4). |da login???
+           |Anno Contabile
+           03  I-ANN-CON            PIC 9(4). |da login???
+           |S=Invio Fax/E-mail
+           03  I-INV-FAXE           PIC X.    |da tabella utenti???
+           |S=Archiviazione
+           03  I-ARC-OTT            PIC X.    |da tabella utenti???
+           |S=Pgm.Grafici
+           03  I-VER-GRAF           PIC X.    |da tabella utenti???
+           03  I-NAM-SRV            PIC X(20).|???
+           03  I-HANDLE-BMP         HANDLE OF BITMAP. |di quale bitmap??? Che uso se ne fa???
+           |S=Licenza SW
+           03  I-KEY-SW             PIC X.    |???
+           |S=Thin-Client
+           03  I-THIN-CL            PIC X.    |da environment???
+           |S=Data Base
+           03  I-DBASE              PIC X.    |da environment???
+           |Risoluzione 1/2
+           03  I-RISOL              PIC 9.    |da tabella utenti???
+           03  I-LIBERO             PIC X(16).
