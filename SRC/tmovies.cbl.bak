@@ -332,7 +332,6 @@
            WIDTH-IN-CELLS,
            TRANSPARENT,
            TITLE "TITLE",
-           FONT DEFAULT-FONT
            .
 
       * LABEL
@@ -343,12 +342,12 @@
            LINE 7,00,
            LINES 1,31 ,
            SIZE 13,00 ,
+           FONT IS SMALL-FONT,
            ID IS 8,
            HEIGHT-IN-CELLS,
            WIDTH-IN-CELLS,
            TRANSPARENT,
            TITLE "GENRE",
-           FONT DEFAULT-FONT
            .
 
       * BITMAP CONTROLLER
@@ -367,7 +366,7 @@
            LINE 7,00,
            LINES 1,31 ,
            SIZE 13,00 ,
-           FONT DEFAULT-FONT,
+           FONT IS SMALL-FONT,
            ID IS 10,
            HEIGHT-IN-CELLS,
            WIDTH-IN-CELLS,
