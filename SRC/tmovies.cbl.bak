@@ -858,10 +858,8 @@
                       MOVE 1 TO MOD
                       SET STATUSEDIT     TO TRUE
                       MOVE 1 TO E-DELETE, E-PICK
-                      MOVE 0 TO MOD-K
                    ELSE
                       MOVE 0 TO MOD
-                      MOVE 1 TO MOD-K
                       MOVE 0 TO E-DELETE, E-PICK 
                       SET STATUSVIEW     TO TRUE
                    END-IF
