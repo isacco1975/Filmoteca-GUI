@@ -88,6 +88,7 @@
            88 VALID-STATUS-MOVIES VALUE IS "00" THRU "09".
        77 STATUS-GENRES    PIC  X(2).
            88 VALID-STATUS-GENRES VALUE IS "00" THRU "09".
+       77 EF-GEN-BUF PIC 9(2) VALUE ZERO.    
 
        77 OLD-MOV-REC PIC X(356).
        77 DECISION PIC 9.
@@ -843,11 +844,11 @@
                HANDLE IS FORM1-ST-1-HANDLE
            DISPLAY FORM1 UPON FORM1-HANDLE
 
+           DISPLAY FORM1
            PERFORM FIRST-ENTRY
 
            MOVE ZERO TO MOD
            MOVE 1    TO MOD-K
-           DISPLAY FORM1
 
            MODIFY TOOL-EDIT,    VALUE   MOD
            MODIFY TOOL-DELETE,  ENABLED MOD
@@ -904,7 +905,6 @@
                    MODIFY PB-GENRE-ZOOM ENABLED MOD
 
                    PERFORM STATUS-BAR-MSG
-                   DISPLAY FORM1
                 END-IF
            END-EVALUATE.
 
@@ -929,6 +929,8 @@
                   PERFORM NEXT-ENTRY
                WHEN KEY-STATUS = 1006
                   PERFORM LAST-ENTRY
+               WHEN KEY-STATUS = 2003
+                  PERFORM ZOOM-GENRES
            END-EVALUATE
 
       * AVOID CHANGING FOCUS
@@ -1084,6 +1086,14 @@
            MODIFY EF-LOGO      VALUE IMAGEN
            MODIFY EF-DISTRIB   VALUE DISTRIB
            MODIFY EF-DURATION  VALUE DURACAO
+           
+           INQUIRE EF-GENRE    VALUE IN CODIGO-GEN
+           
+           IF EF-GEN-BUF NOT = ZERO
+              MOVE EF-GEN-BUF TO CODIGO-GEN
+           END-IF
+              
+           PERFORM READ-GENRE
 
            CALL "W$BITMAP"
                 USING  WBITMAP-LOAD
@@ -1113,13 +1123,13 @@
       *----------------------------------------------------------------*
       * RETRIEVE THE GENRE FROM CODE                                   *
       *----------------------------------------------------------------*
-       READ-GENRE.             
-           INQUIRE EF-GENRE VALUE IN CODIGO-GEN
-           
+       READ-GENRE.                        
            READ GENRES
-                INVALID MODIFY LBL-GENRE-DES VALUE  '<NOT APPLICABLE>'
+                INVALID MODIFY LBL-GENRE-DES TITLE  '<NOT APPLICABLE>'
                 NOT INVALID
-                        MODIFY LBL-GENRE-DES VALUE DESC-GEN
+                        MODIFY LBL-GENRE-DES TITLE DESC-GEN
+                        MODIFY EF-GENRE   VALUE    CODIGO-GEN
+                        MOVE ZERO TO EF-GEN-BUF
            END-READ                                
            .
       /
@@ -1130,7 +1140,7 @@
            .
       /
       *----------------------------------------------------------------*
-      * CALL TO XZOOM                                                  *
+      * CALL TO XZOOM  FOR FILE MOVIES                                 *
       *----------------------------------------------------------------*
        ZOOM-ENTRIES.
            EVALUATE CONTROL-ID
@@ -1146,6 +1156,24 @@
                    PERFORM FROMREC-TOSCREEN
                 END-IF
            END-EVALUATE
+           .
+      /
+      *----------------------------------------------------------------*
+      * CALL TO XZOOM  FOR FILE GENRES                                 *
+      *----------------------------------------------------------------*
+       ZOOM-GENRES.
+           MOVE "GENRE.DAT"  TO COMO-FILE
+           INQUIRE EF-GENRE VALUE IN CODIGO-GEN
+           CALL "ZOOM-GT"  USING COMO-FILE, REG-GEN
+                          GIVING STATO-ZOOM
+           END-CALL
+           CANCEL "ZOOM-GT"
+           MOVE ZERO TO EF-GEN-BUF
+
+           IF STATO-ZOOM = 0
+              MOVE CODIGO-GEN TO EF-GEN-BUF
+              PERFORM FROMREC-TOSCREEN              
+           END-IF
            .
       /
       *----------------------------------------------------------------*
