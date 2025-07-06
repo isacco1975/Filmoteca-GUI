@@ -904,7 +904,9 @@
                    MODIFY PB-LOGO       ENABLED MOD
                    MODIFY PB-GENRE-ZOOM ENABLED MOD
 
+                   DISPLAY FORM1 
                    PERFORM STATUS-BAR-MSG
+                   PERFORM READ-GENRE
                 END-IF
            END-EVALUATE.
 
