@@ -2,7 +2,33 @@
        PROGRAM-ID.          MOVIES.
        AUTHOR.              ISAAC GARCIA PEVERI
        DATE-WRITTEN.        2025 JULY 4
-
+      /
+      ******************************************************************
+      *                                                                *
+      *  FORMERLY FILMOTECA.EDUC360 GUI                                *
+      *           GUI C. 2025 BY ISAAC GARCIA PEVERI (IGP TECH BLOG)   *
+      *           OLD C. 2025 BY FABIO MARQUES                         *
+      *                                                                *
+      *          THIS IS THE GRAPHICAL VERSION OG THE CHARACTER BASED  *
+      *          PTOGRAM, ORIGINALLY DEVELOPED BY FABIO MARQUES WITH   *
+      *          GNU COBOL (FORMERLY OPEN COBOL), PORTED TO ACUSOBOL   *
+      *          WITH CHARACTER BASED BY ISAAC GARCIA PEVERI.          *
+      *                                                                *
+      *          ALL RIGHTS RESERVED                                   *
+      *                                                                *
+      ******************************************************************
+      *                                                                *
+      *          OTHER CHANGES FROM OLD CHARACTER VERSION:             *
+      *                - ENTIRELY REWRITTEN FROM SCRATCH WITH GUI      *
+      *                - GENRES FILE IS ANOTHER INDEXED FILE           *
+      *                                                                *
+      ******************************************************************
+      *                                                                *
+      *          THIS SOFTWARE IS FOR EDUCATIONAL PURPOSES ONLY        *
+      *          AND USES THIRD PARTY LIBRARIES (XTREME ZOOM)          *
+      *                                                                *
+      ******************************************************************
+      /
        ENVIRONMENT          DIVISION.
        CONFIGURATION        SECTION.
        SPECIAL-NAMES.
@@ -127,6 +153,7 @@
            HEIGHT-IN-CELLS,
            WIDTH-IN-CELLS,
            MAX-TEXT 2,
+           AFTER PROCEDURE READ-GENRE
            .
 
       * ENTRY FIELD
@@ -167,7 +194,7 @@
 
       * LABEL
        05
-           LBL-GENRE,
+           LBL-GENRE-DES,
            LABEL,
            COL 30,00,
            LINE 7,00,
@@ -681,7 +708,6 @@
                    DISPLAY FORM1-TB-1
                    SET OLD-REC    TO TRUE
                 END-IF
-      *          PERFORM ABILITAZIONI
 
                 DISPLAY FORM1
                 MOVE "23" TO STATUS-MOVIES
@@ -1066,9 +1092,9 @@
 
            MODIFY MOVIEBMP BITMAP-HANDLE LOGO-BMP
 
-      *    CALL "W$BITMAP"
-      *         USING WBITMAP-DESTROY
-      *               LOGO-BMP
+           CALL "W$BITMAP"
+                USING WBITMAP-DESTROY
+                      LOGO-BMP
            .
       /
       *----------------------------------------------------------------*
@@ -1082,6 +1108,19 @@
            INQUIRE EF-DURATION VALUE DURACAO
            INQUIRE EF-GRADE    VALUE NOTA
            INQUIRE EF-LOGO     VALUE IMAGEN
+           .
+      /
+      *----------------------------------------------------------------*
+      * RETRIEVE THE GENRE FROM CODE                                   *
+      *----------------------------------------------------------------*
+       READ-GENRE.             
+           INQUIRE EF-GENRE VALUE IN CODIGO-GEN
+           
+           READ GENRES
+                INVALID MODIFY LBL-GENRE-DES VALUE  '<NOT APPLICABLE>'
+                NOT INVALID
+                        MODIFY LBL-GENRE-DES VALUE DESC-GEN
+           END-READ                                
            .
       /
       *----------------------------------------------------------------*

@@ -3,7 +3,6 @@
       **
            SELECT GENRES
               ASSIGN       TO 'GENRE.dat'
-              ORGANIZATION IS INDEXED
-              ACCESS MODE  IS DYNAMIC
-              RECORD KEY   IS CODIGO-GEN WITH NO DUPLICATES
+              ORGANIZATION IS LINE SEQUENTIAL
+              ACCESS MODE  IS SEQUENTIAL
               FILE STATUS  IS STATUS-GENRES.
