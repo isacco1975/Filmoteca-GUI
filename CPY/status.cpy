@@ -9,7 +9,7 @@
                 modify form1-st-1-handle, 
                        panel-index  3,
                        panel-text  "VIEWING"
-                move 0 to StatusHelp
+                move 1 to StatusHelp
                 perform STATUS-HELP
            when STATUSINS
                 modify form1-st-1-handle, 

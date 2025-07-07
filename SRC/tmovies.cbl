@@ -535,6 +535,7 @@
       *----------------------------------------------------------------*
        ZOOM-ENTRIES.
            EVALUATE CONTROL-ID
+           WHEN 5001
            WHEN 5002
                 MOVE "MOVIES.DAT"  TO COMO-FILE
                 INQUIRE EF-CODE, VALUE IN CODIGO
