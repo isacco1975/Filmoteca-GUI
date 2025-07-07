@@ -12,8 +12,7 @@ Welcome to the Educ360 Film Library!
 This COBOL CRUD system (Create, Read, Update, Delete) was developed as a final project for the **COBOL Bootcamp** by [Company.educ360](https://companye.academy/)
 
 # NOTE: everything is working as expected except file picker for images (todo)
-#       this software is for educational purposes only, and it's provided
-#       without any kind of warranty.
+#       this software is for educational purposes only, and it's provided without any kind of warranty.
 
 Originally character based by Fabio Marques.
 Link to the original project: https://github.com/fmarqueseti/Filmoteca-Educ360
