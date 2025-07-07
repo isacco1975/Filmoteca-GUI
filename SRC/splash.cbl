@@ -89,7 +89,8 @@
       *----------------------------------------------------------------*
        INIT-BMP.
            COPY RESOURCE "..\RESOURCE\EDUC.BMP".
-           CALL "W$BITMAP" USING WBITMAP-LOAD "..\RESOURCE\EDUC.BMP",
+           CALL "W$BITMAP" USING WBITMAP-LOAD
+            "..\RESOURCE\EDUC.BMP",
                    GIVING LOGO-BMP.
            .
       /
