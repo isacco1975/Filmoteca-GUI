@@ -1,7 +1,7 @@
       **
       * COPY BOOK MOVIES DATA FILE
       **
-       01 MOV-REC.                  *> LRECL 356
+       01 MOV-REC.                  *> LRECL 286
            05 CODIGO                PIC 9(05).
            05 TITULO                PIC X(30).
            05 GENERO                PIC X(02).

@@ -83,9 +83,18 @@
            88 VALID-STATUS-MOVIES VALUE IS "00" THRU "09".
        77 STATUS-GENRES    PIC  X(2).
            88 VALID-STATUS-GENRES VALUE IS "00" THRU "09".
-       77 EF-GEN-BUF PIC 9(2) VALUE ZERO.    
-       77 OLD-MOV-REC PIC X(356).
+       77 EF-GEN-BUF PIC 9(2) VALUE ZERO.
        77 DECISION PIC 9.
+
+       01 OLD-MOV-REC.
+          05 OLD-CODIGO                PIC 9(05).
+          05 OLD-TITULO                PIC X(30).
+          05 OLD-GENERO                PIC X(02).
+          05 OLD-DURACAO               PIC 9(03).
+          05 OLD-DISTRIB               PIC X(15).
+          05 OLD-NOTA                  PIC 9(02).
+          05 OLD-FILLER                PIC X(37).
+          05 OLD-IMAGEN                PIC X(256).
 
        LINKAGE          SECTION.
 
@@ -203,8 +212,13 @@
                HANDLE IS FORM1-ST-1-HANDLE
            DISPLAY FORM1 UPON FORM1-HANDLE
 
+           INITIALIZE OLD-MOV-REC
+                      REPLACING NUMERIC DATA BY ZERO
+                           ALPHANUMERIC DATA BY SPACES
+
            DISPLAY FORM1
            PERFORM FIRST-ENTRY
+           MOVE MOV-REC TO OLD-MOV-REC
 
            MOVE ZERO TO MOD
            MOVE 1    TO MOD-K
@@ -255,7 +269,7 @@
                       SET STATUSVIEW     TO TRUE
                    END-IF
 
-                   MODIFY TOOL-NEW      ENABLED MOD  
+                   MODIFY TOOL-NEW      ENABLED MOD
                    MODIFY TOOL-EDIT,    VALUE   MOD
                    MODIFY TOOL-DELETE,  ENABLED MOD
                    MODIFY TOOL-SEARCH   ENABLED MOD
@@ -263,7 +277,7 @@
                    MODIFY PB-LOGO       ENABLED MOD
                    MODIFY PB-GENRE-ZOOM ENABLED MOD
 
-                   DISPLAY FORM1 
+                   DISPLAY FORM1
                    PERFORM STATUS-BAR-MSG
                    PERFORM READ-GENRE
                 END-IF
@@ -344,20 +358,8 @@
 
            WRITE MOV-REC
                  INVALID KEY
-                         DISPLAY MESSAGE BOX
-                            "Save changes to the current Entry?"
-                            TITLE   TITLEX
-                            TYPE    MB-YES-NO
-                            DEFAULT MB-NO
-                            GIVING  DECISION
-
-                         IF DECISION = MB-YES
-                            REWRITE MOV-REC
-                               INVALID KEY
-                                   DISPLAY MESSAGE BOX
-                                    "Error during REWRITE"
-                                    TITLE   TITLEX
-                         END-IF
+                     PERFORM CHECK-CHANGES
+                     PERFORM SAVE-CHANGES
            END-WRITE
            .
       /
@@ -397,6 +399,7 @@
       * SHOW FIRST RECORD                                              *
       *----------------------------------------------------------------*
        FIRST-ENTRY.
+           PERFORM CHECK-CHANGES
            PERFORM START-MOVIES-LESS
            PERFORM FROMREC-TOSCREEN
            .
@@ -405,6 +408,8 @@
       * SHOW NEXT RECORD                                               *
       *----------------------------------------------------------------*
        NEXT-ENTRY.
+           PERFORM CHECK-CHANGES
+
            READ MOVIES NEXT
                 AT END
                    DISPLAY MESSAGE "Reached the End of File"
@@ -418,6 +423,8 @@
       * SHOW PREVIOUS RECORD                                           *
       *----------------------------------------------------------------*
        PREV-ENTRY.
+           PERFORM CHECK-CHANGES
+
            READ MOVIES PREVIOUS
                 AT END
                    DISPLAY MESSAGE "Reached the Beginning of File"
@@ -431,6 +438,7 @@
       * SHOW LAST  RECORD                                              *
       *----------------------------------------------------------------*
        LAST-ENTRY.
+           PERFORM CHECK-CHANGES
            PERFORM START-MOVIES-GREATER
            PERFORM FROMREC-TOSCREEN
            .
@@ -441,6 +449,7 @@
        FROMREC-TOSCREEN.
            MOVE ZERO       TO MOD-K
            MOVE 1          TO MOD
+           MOVE MOV-REC    TO OLD-MOV-REC
 
            MODIFY EF-CODE      VALUE CODIGO
            MODIFY EF-TITLE     VALUE TITULO
@@ -449,13 +458,13 @@
            MODIFY EF-LOGO      VALUE IMAGEN
            MODIFY EF-DISTRIB   VALUE DISTRIB
            MODIFY EF-DURATION  VALUE DURACAO
-           
+
            INQUIRE EF-GENRE    VALUE IN CODIGO-GEN
-           
+
            IF EF-GEN-BUF NOT = ZERO
               MOVE EF-GEN-BUF TO CODIGO-GEN
            END-IF
-              
+
            PERFORM READ-GENRE
 
            CALL "W$BITMAP"
@@ -486,22 +495,22 @@
       *----------------------------------------------------------------*
       * RETRIEVE THE GENRE FROM CODE                                   *
       *----------------------------------------------------------------*
-       READ-GENRE.     
+       READ-GENRE.
            IF EF-GEN-BUF = ZERO
               INQUIRE EF-GENRE VALUE IN CODIGO-GEN
-           END-IF                      
-           
+           END-IF
+
            READ GENRES
                 INVALID MODIFY LBL-GENRE-DES TITLE  '<NOT APPLICABLE>'
                 NOT INVALID
                         MODIFY LBL-GENRE-DES TITLE DESC-GEN
                         MODIFY EF-GENRE   VALUE    CODIGO-GEN
                         MOVE ZERO TO EF-GEN-BUF
-           END-READ                                
+           END-READ
            .
       /
       *----------------------------------------------------------------*
-      * SAVE CHANGES                                                   *
+      * DELETE ENTRY                                                    *
       *----------------------------------------------------------------*
        DELETE-ENTRY.
            INQUIRE EF-CODE VALUE IN CODIGO
@@ -521,13 +530,38 @@
                             DISPLAY MESSAGE "Deleted!"
                             PERFORM FIRST-ENTRY
                          END-IF
-           END-READ             
+           END-READ
            .
       /
       *----------------------------------------------------------------*
-      * SAVE CHANGES                                                   *
+      * CHECK CHANGES                                                  *
       *----------------------------------------------------------------*
-       SAVE-CHANGES-ROUTINE.
+       CHECK-CHANGES.
+           PERFORM FROMSCREEN-TORECORD
+
+           IF MOV-REC NOT = OLD-MOV-REC
+                 PERFORM SAVE-CHANGES
+           END-IF
+           .
+      /
+      *----------------------------------------------------------------*
+      * WRITES THE ENTRY TO THE FILE                                   *
+      *----------------------------------------------------------------*
+       SAVE-CHANGES.
+           DISPLAY MESSAGE BOX
+              "Save changes to the current Entry?"
+              TITLE   TITLEX
+              TYPE    MB-YES-NO
+              DEFAULT MB-NO
+              GIVING  DECISION
+
+           IF DECISION = MB-YES
+              REWRITE MOV-REC
+                 INVALID KEY
+                     DISPLAY MESSAGE BOX
+                      "Error during REWRITE"
+                      TITLE   TITLEX
+           END-IF
            .
       /
       *----------------------------------------------------------------*
@@ -564,7 +598,7 @@
 
            IF STATO-ZOOM = 0
               MOVE CODIGO-GEN TO EF-GEN-BUF
-              PERFORM FROMREC-TOSCREEN              
+              PERFORM FROMREC-TOSCREEN
            END-IF
            .
       /
@@ -581,7 +615,7 @@
       * EXITING PROGRAM                                                *
       *----------------------------------------------------------------*
        FORM1-EXIT.
-           PERFORM SAVE-CHANGES-ROUTINE.
+           PERFORM SAVE-CHANGES
 
            IF ERRORI
               MOVE 26 TO KEY-STATUS
