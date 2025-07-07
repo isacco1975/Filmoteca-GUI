@@ -486,7 +486,11 @@
       *----------------------------------------------------------------*
       * RETRIEVE THE GENRE FROM CODE                                   *
       *----------------------------------------------------------------*
-       READ-GENRE.                        
+       READ-GENRE.     
+           IF EF-GEN-BUF = ZERO
+              INQUIRE EF-GENRE VALUE IN CODIGO-GEN
+           END-IF                      
+           
            READ GENRES
                 INVALID MODIFY LBL-GENRE-DES TITLE  '<NOT APPLICABLE>'
                 NOT INVALID
