@@ -66,11 +66,6 @@
                   USAGE IS HANDLE OF WINDOW.
        77 FORM1-TB-1-HANDLE
                   USAGE IS HANDLE OF WINDOW.
-       77 E-ESC            PIC  9 VALUE 1.
-       77 E-NEW            PIC  9 VALUE 1.
-       77 E-DELETE         PIC  9 VALUE 1.
-       77 E-SAVE           PIC  9 VALUE 1.
-       77 E-PREVIEW        PIC  9 VALUE 1.
        77 E-EDIT           PIC  9 VALUE 1.
        77 E-PRINT          PIC  9 VALUE ZERO.
        77 E-SEARCH         PIC  9 VALUE 1.
@@ -89,7 +84,6 @@
        77 STATUS-GENRES    PIC  X(2).
            88 VALID-STATUS-GENRES VALUE IS "00" THRU "09".
        77 EF-GEN-BUF PIC 9(2) VALUE ZERO.    
-
        77 OLD-MOV-REC PIC X(356).
        77 DECISION PIC 9.
 
@@ -99,73 +93,6 @@
            COPY "SCNVIDLST.CPY".
 
        PROCEDURE  DIVISION.
-       DECLARATIVES.
-      /
-      *----------------------------------------------------------------*
-      * DECLARATIVES TO HABDLE COMMON FILE ERRORS                      *
-      *----------------------------------------------------------------*
-       MOVIES-ERR SECTION.
-           USE AFTER ERROR PROCEDURE ON MOVIES.
-           SET RECLOCKED TO FALSE.
-           EVALUATE STATUS-MOVIES
-           WHEN "35"
-                DISPLAY MESSAGE "FILE [MOVIES] NOT FOUND!"
-                           TITLE TITLEX
-                            ICON 3
-                SET ERRORI TO TRUE
-           WHEN "39"
-                DISPLAY MESSAGE "FILE [MOVIES] MISMATCH SIZE!"
-                           TITLE TITLEX
-                            ICON 3
-                SET ERRORI TO TRUE
-           WHEN "98"
-                DISPLAY MESSAGE "[MOVIES] INDEXED FILE CORRUPT!"
-                           TITLE TITLEX
-                            ICON 3
-                SET ERRORI TO TRUE
-           WHEN "93"
-                DISPLAY MESSAGE BOX "FILE ALREADY IN USE!"
-                          TITLE TIT-ERR
-                           ICON 3
-                GOBACK
-           WHEN "23"
-                MOVE 1 TO MOD-K
-                MOVE 0 TO MOD
-                MODIFY TOOL-EDIT, VALUE = MOD
-                SET STATUSVIEW  TO TRUE
-                PERFORM STATUS-BAR-MSG
-
-                IF NEW-REC
-                   INITIALIZE MOV-REC OF MOVIES
-                              REPLACING NUMERIC DATA BY ZEROES
-                                   ALPHANUMERIC DATA BY SPACES
-      *             PERFORM FORM1-FLD-TO-BUF
-                   DISPLAY FORM1-TB-1
-                   SET OLD-REC    TO TRUE
-                END-IF
-
-                DISPLAY FORM1
-                MOVE "23" TO STATUS-MOVIES
-           END-EVALUATE.
-
-       INPUT-ERROR SECTION.
-           USE AFTER STANDARD ERROR PROCEDURE ON INPUT.
-       0100-DECL.
-           EXIT.
-       I-O-ERROR SECTION.
-           USE AFTER STANDARD ERROR PROCEDURE ON I-O.
-       0200-DECL.
-           EXIT.
-       OUTPUT-ERROR SECTION.
-           USE AFTER STANDARD ERROR PROCEDURE ON OUTPUT.
-       0300-DECL.
-           EXIT.
-       TRANSACTION-ERROR SECTION.
-           USE AFTER STANDARD ERROR PROCEDURE ON TRANSACTION.
-       0400-DECL.
-           EXIT.
-       END DECLARATIVES.
-      /
       *----------------------------------------------------------------*
       * MAIN                                                           *
       *----------------------------------------------------------------*
@@ -322,12 +249,10 @@
                    IF MOD = 0
                       MOVE 1 TO MOD
                       SET STATUSEDIT     TO TRUE
-                      MOVE 1 TO E-DELETE, E-PICK
                       MOVE 0 TO MOD-K
                    ELSE
                       MOVE 0 TO MOD
                       MOVE 1 TO MOD-K
-                      MOVE 0 TO E-DELETE, E-PICK
                       SET STATUSVIEW     TO TRUE
                    END-IF
 
