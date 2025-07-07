@@ -1156,6 +1156,7 @@
                          IF DECISION = MB-YES
                             DELETE  MOVIES RECORD
                             DISPLAY MESSAGE "Deleted!"
+                            PERFORM FIRST-ENTRY
                          END-IF
            END-READ             
            .
