@@ -280,6 +280,7 @@
                    DISPLAY FORM1
                    PERFORM STATUS-BAR-MSG
                    PERFORM READ-GENRE
+                   PERFORM CHECK-CHANGES
                 END-IF
            END-EVALUATE.
 
