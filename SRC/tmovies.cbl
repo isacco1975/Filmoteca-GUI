@@ -134,7 +134,6 @@
            END-IF
       *
            IF NOT VALID-STATUS-MOVIES
-      *        PERFORM  FORM1-EXTENDED-FILE-STATUS
                PERFORM EXIT-STOP-ROUTINE
            END-IF
 
@@ -149,7 +148,6 @@
            END-IF
       *
            IF NOT VALID-STATUS-GENRES
-      *        PERFORM  FORM1-EXTENDED-FILE-STATUS
                PERFORM EXIT-STOP-ROUTINE
            END-IF
            .
