@@ -212,6 +212,7 @@
            MOVE 1    TO MOD-K
 
            MODIFY TOOL-EDIT,    VALUE   MOD
+           MODIFY TOOL-NEW      ENABLED MOD
            MODIFY TOOL-DELETE,  ENABLED MOD
            MODIFY TOOL-SEARCH   ENABLED MOD
            MODIFY TOOL-SAVE     ENABLED MOD
@@ -256,6 +257,7 @@
                       SET STATUSVIEW     TO TRUE
                    END-IF
 
+                   MODIFY TOOL-NEW      ENABLED MOD  
                    MODIFY TOOL-EDIT,    VALUE   MOD
                    MODIFY TOOL-DELETE,  ENABLED MOD
                    MODIFY TOOL-SEARCH   ENABLED MOD
