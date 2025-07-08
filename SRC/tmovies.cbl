@@ -459,7 +459,10 @@
        FROMREC-TOSCREEN.
            MOVE ZERO       TO MOD-K
            MOVE 1          TO MOD
-           MOVE MOV-REC    TO OLD-MOV-REC
+           
+           IF OPENSAVE-STATUS NOT = 1
+              MOVE MOV-REC    TO OLD-MOV-REC
+           END-IF   
 
            MODIFY EF-CODE      VALUE CODIGO
            MODIFY EF-TITLE     VALUE TITULO
@@ -486,7 +489,12 @@
 
            CALL "W$BITMAP"
                 USING WBITMAP-DESTROY
-                      LOGO-BMP
+                      LOGO-BMP                     
+
+           IF OPENSAVE-STATUS = 1
+              PERFORM CHECK-CHANGES 
+              MOVE ZERO TO OPENSAVE-STATUS           
+           END-IF    
            .
       /
       *----------------------------------------------------------------*
@@ -571,6 +579,8 @@
                      DISPLAY MESSAGE BOX
                       "Error during REWRITE"
                       TITLE   TITLEX
+                 NOT INVALID
+                     MOVE MOV-REC TO OLD-MOV-REC     
            END-IF
            .
       /
@@ -632,7 +642,7 @@
            ELSE
               MODIFY EF-LOGO     VALUE OPNSAV-FILENAME
            END-IF
-
+ 
            MOVE OPNSAV-FILENAME TO IMAGEN
            PERFORM FROMREC-TOSCREEN
            .
