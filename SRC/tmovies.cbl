@@ -48,6 +48,7 @@
           COPY 'CPVIDGEN.CPY'.
 
        WORKING-STORAGE      SECTION.
+               COPY "OPENSAVE.DEF".
                COPY "ACUGUI.DEF".
                COPY "ACUCOBOL.DEF".
                COPY "CRTVARS.DEF".
@@ -96,10 +97,16 @@
           05 OLD-FILLER                PIC X(37).
           05 OLD-IMAGEN                PIC X(256).
 
+       77  OPENSAVE-DATA-SIZE    PIC 9(4) BINARY.
+       77  OPENSAVE-DATA-ADDR    POINTER.
+       77  OPENSAVE-STATUS       PIC S99.
+           88  OPENSAVE-OK       VALUE 1.
+       77  FILE-NAME             PIC X(256).
+
        LINKAGE          SECTION.
 
        SCREEN           SECTION.
-           COPY "SCNVIDLST.CPY".
+               COPY "SCNVIDLST.CPY".
 
        PROCEDURE  DIVISION.
       *----------------------------------------------------------------*
@@ -301,6 +308,8 @@
                   PERFORM ZOOM-ENTRIES
                WHEN KEY-STATUS = 1002
                   PERFORM FIRST-ENTRY
+               WHEN KEY-STATUS = 1003
+                  PERFORM ZOOM-LOGO
                WHEN KEY-STATUS = 67
                   PERFORM PREV-ENTRY
                WHEN KEY-STATUS = 68
@@ -601,6 +610,31 @@
               MOVE CODIGO-GEN TO EF-GEN-BUF
               PERFORM FROMREC-TOSCREEN
            END-IF
+           .
+      /
+      *----------------------------------------------------------------*
+      * OPEN AN IMAGE FILE                                             *
+      *----------------------------------------------------------------*
+       ZOOM-LOGO.
+           INITIALIZE                 OPENSAVE-DATA
+
+           MOVE "PICK..."                 TO OPNSAV-TITLE
+           MOVE "*.JPG"                   TO OPNSAV-FILTERS
+                                              OPNSAV-DEFAULT-FILTER
+      *
+           CALL "C$OPENSAVEBOX" USING OPENSAVE-OPEN-BOX
+                                      OPENSAVE-DATA
+                               GIVING OPENSAVE-STATUS
+
+           IF OPENSAVE-STATUS NOT = 1
+              INITIALIZE               OPENSAVE-DATA
+              MODIFY EF-LOGO     VALUE SPACES
+           ELSE
+              MODIFY EF-LOGO     VALUE OPNSAV-FILENAME
+           END-IF
+
+           MOVE OPNSAV-FILENAME TO IMAGEN
+           PERFORM FROMREC-TOSCREEN
            .
       /
       *----------------------------------------------------------------*
