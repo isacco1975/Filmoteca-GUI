@@ -356,6 +356,13 @@
            DISPLAY FORM1
            PERFORM FROMREC-TOSCREEN
 
+           MODIFY EF-TITLE      VALUE SPACES
+           MODIFY EF-GENRE      VALUE SPACES
+           MODIFY LBL-GENRE-DES TITLE SPACES
+           MODIFY EF-DURATION   VALUE SPACES
+           MODIFY EF-DISTRIB    VALUE SPACES
+           MODIFY EF-LOGO       VALUE SPACES
+
            MOVE 5002   TO CONTROL-ID
            MOVE 4      TO ACCEPT-CONTROL
            .
@@ -618,7 +625,7 @@
 
            IF STATO-ZOOM = 0
               MOVE CODIGO-GEN TO EF-GEN-BUF
-              PERFORM FROMREC-TOSCREEN
+              PERFORM READ-GENRE
            END-IF
            .
       /
