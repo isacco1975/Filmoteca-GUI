@@ -58,6 +58,40 @@
            AFTER PROCEDURE READ-GENRE
            .
 
+      * PUSH BUTTON
+       05
+           PB-GENRE-ZOOM,
+           PUSH-BUTTON,
+           COL 25,50,
+           LINE 7,00,
+           LINES 1,31 ,
+           SIZE 3,50 ,
+           EXCEPTION-VALUE 2003,
+           FONT IS SMALL-FONT,
+           ID IS 6005,
+           HEIGHT-IN-CELLS,
+           WIDTH-IN-CELLS,
+           TITLE "...",
+           .
+
+      * ENTRY FIELD
+       05
+           EF-GRADE,
+           ENTRY-FIELD,
+           COL 75,00,
+           LINE 7,00,
+           LINES 1,31 ,
+           SIZE 5,00 ,
+           BOXED,
+           COLOR IS 2,
+           ENABLED MOD,
+           FONT IS SMALL-FONT,
+           ID IS 5013,
+           HEIGHT-IN-CELLS,
+           WIDTH-IN-CELLS,
+           MAX-TEXT 30,
+           .
+
       * ENTRY FIELD
        05
            EF-DURATION,
@@ -109,22 +143,6 @@
            COLOR 5
            .
 
-      * PUSH BUTTON
-       05
-           PB-GENRE-ZOOM,
-           PUSH-BUTTON,
-           COL 25,50,
-           LINE 7,00,
-           LINES 1,31 ,
-           SIZE 3,50 ,
-           EXCEPTION-VALUE 2003,
-           FONT IS SMALL-FONT,
-           ID IS 6005,
-           HEIGHT-IN-CELLS,
-           WIDTH-IN-CELLS,
-           TITLE "...",
-           .
-
       * LABEL
        05
            LBL-DISTR,
@@ -151,24 +169,6 @@
            WIDTH-IN-CELLS,
            TITLE "DURATION",
            FONT DEFAULT-FONT
-           .
-
-      * ENTRY FIELD
-       05
-           EF-GRADE,
-           ENTRY-FIELD,
-           COL 75,00,
-           LINE 7,00,
-           LINES 1,31 ,
-           SIZE 5,00 ,
-           BOXED,
-           COLOR IS 2,
-           ENABLED MOD,
-           FONT IS SMALL-FONT,
-           ID IS 5013,
-           HEIGHT-IN-CELLS,
-           WIDTH-IN-CELLS,
-           MAX-TEXT 30,
            .
 
       * LABEL
