@@ -11,7 +11,12 @@ Written by Isaac Garcia Peveri 2025 in ACU Cobol
 Welcome to the Educ360 Film Library! 
 This COBOL CRUD system (Create, Read, Update, Delete) was developed as a final project for the **COBOL Bootcamp** by [Company.educ360](https://companye.academy/)
 
+# -------
+# To run this application, you need AcuCobol-GT 7 Runtime.
+# To Build this application, you need Acucobol-GT 7 Compiler.
+# -------
 # NOTE: this software is for educational purposes only, and it's provided without any kind of warranty nor free bugs.
+# -------
 
 Originally character based by Fabio Marques.
 Link to the original project: https://github.com/fmarqueseti/Filmoteca-Educ360
