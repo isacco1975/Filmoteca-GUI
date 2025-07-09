@@ -372,12 +372,7 @@
       *----------------------------------------------------------------*
        SAVE-ENTRY.
            PERFORM FROMSCREEN-TORECORD
-
-           WRITE MOV-REC
-                 INVALID KEY
-                     PERFORM CHECK-CHANGES
-                     PERFORM SAVE-CHANGES
-           END-WRITE
+           PERFORM CHECK-CHANGES
            .
       /
       *----------------------------------------------------------------*
@@ -583,9 +578,8 @@
            IF DECISION = MB-YES
               REWRITE MOV-REC
                  INVALID KEY
-                     DISPLAY MESSAGE BOX
-                      "Error during REWRITE"
-                      TITLE   TITLEX
+                     WRITE MOV-REC
+                     MOVE MOV-REC TO OLD-MOV-REC     
                  NOT INVALID
                      MOVE MOV-REC TO OLD-MOV-REC     
            END-IF
